@@ -1,0 +1,26 @@
+*{
+    font-family: Bahnschrift;
+}
+
+body{
+    background: url("../images/fondo.jpg") center no-repeat fixed;
+}
+
+
+.principal img{
+    width: 200px;
+    height: 200px;
+}
+
+.div-Centro{
+    text-align: center;
+    background-color: rgb(255, 255, 255);
+    border: 3px solid rgba(72, 37, 192, 0.35);
+    border-radius: 20px;
+}
+
+.div-Centro a{
+    color: #000000;
+    text-decoration: none;
+    font-size: 25px;
+}
