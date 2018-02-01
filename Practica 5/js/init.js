@@ -58,6 +58,18 @@ function init() {
     initPopulate(store);
     shopMenusPopulate(store);
 
+    var home = document.getElementById("home");
+
+    function homeEvent(store) {
+        return function () {
+            var principal = document.getElementById("principal");
+            principal.remove();
+            initPopulate(store);
+        }
+    }
+
+    document.getElementById("home").addEventListener("click", homeEvent(store));
+
 
     function initPopulate(store) {
 
