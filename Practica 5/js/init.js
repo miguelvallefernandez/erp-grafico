@@ -19,9 +19,16 @@ function init() {
     var titanic = new DVD("Titanc", "James Cameron", "0001", "DVD-Titanic", "20");
     var fast = new DVD("Fast and Furious 7", "Vin Diesel", "0002", "DVD-A Todo Gas 7", "35");
 
-    var aquarisu = new Smartphone("Aquaris U Lite", "0003", "BQ Aquaris", "180");
-    var tvLG = new TV("LG Smart", "0004", "SmartTV", "550");
-    var aquarisx = new Smartphone("Aquaris X", "0005", "BQ Aquaris", "350");
+    var aquarisu = new Smartphone("Aquaris U", "0003", "BQ Aquaris U", "180");
+    var tvLG = new TV("LG Smart", "0004", "SmartTV LG", "550");
+    var aquarisx = new Smartphone("Aquaris X", "0005", "BQ Aquaris X", "350");
+
+    titanic.images = "images/productos/titanic.jpg";
+    fast.images = "images/productos/fastfurious.jpg";
+    aquarisu.images = "images/productos/aquaris-u.jpg";
+    aquarisx.images = "images/productos/aquaris-x.jpg";
+    tvLG.images = "images/productos/smart-tv-lg.jpg";
+
 
     var categoriaMoviles = new Category("Moviles");
     var categoriaPeliculas = new Category("Peliculas");
@@ -63,6 +70,7 @@ function init() {
 
         var divPrincipal = document.createElement("div");
         divPrincipal.setAttribute("class", "principal row");
+        divPrincipal.setAttribute("id", "principal");
         //idDiv.id = "opcion1";
         main.appendChild(divPrincipal);
 
@@ -149,6 +157,14 @@ function init() {
         return function () {
             console.log(tiendaParam);
 
+            var principal = document.getElementById("principal");
+            principal.remove();
+
+            var divPrincipal = document.createElement("div");
+            divPrincipal.setAttribute("class", "principal row");
+            divPrincipal.setAttribute("id", "principal");
+            main.appendChild(divPrincipal);
+
 
             var tiendas = store.tiendas;
             var shop = tiendas.next();
@@ -160,8 +176,36 @@ function init() {
                     var tienda = store.getShopProducts(shop.value);
                     var shop = tienda.next();
                     while (shop.done !== true) {
-                        console.log("Producto: " + shop.value.product.name + ", stock: " + shop.value.stock);
+
+
+                        var div1 = document.createElement("div");
+                        div1.setAttribute("class", "div-Centro col-md-3");
+                        divPrincipal.appendChild(div1);
+                        var div1panel = document.createElement("div");
+                        div1panel.setAttribute("class", "panel-body");
+                        div1.appendChild(div1panel);
+                        var imagen1 = document.createElement("img");
+                        imagen1.setAttribute("src", shop.value.product.images);
+                        imagen1.setAttribute("class", "img-responsive");
+                        div1panel.appendChild(imagen1);
+                        var div1panelf = document.createElement("div");
+                        div1panelf.setAttribute("class", "panel-footer");
+                        div1.appendChild(div1panelf);
+                        var enlace1 = document.createElement("a");
+                        enlace1.setAttribute("href", "#");
+
+                        enlace1.setAttribute("id", "btnTiendaPrincipal" + count++);
+
+                        var textoEnlace1 = document.createTextNode(shop.value.product.name+"("+shop.value.stock+")");
+                        enlace1.appendChild(textoEnlace1);
+                        div1panelf.appendChild(enlace1);
+
+
                         shop = tienda.next();
+
+
+                       // console.log("Producto: " + shop.value.product.name + ", stock: " + shop.value.stock);
+                       // shop = tienda.next();
                     }
                 }
                 shop = tiendas.next();

@@ -96,6 +96,16 @@ function Product(serial, nombre, precio) {
     });
 
     var _images = [];
+
+
+    Object.defineProperty(this, 'images', {
+        get: function () {
+            return _images;
+        },
+        set: function (images) {
+            _images.push(images);
+        }
+    });
 }
 
 Product.prototype = {};
