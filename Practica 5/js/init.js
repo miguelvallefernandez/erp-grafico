@@ -23,11 +23,25 @@ function init() {
     var tvLG = new TV("LG Smart", "0004", "SmartTV LG", "550");
     var aquarisx = new Smartphone("Aquaris X", "0005", "BQ Aquaris X", "350");
 
+    var lgOptimus = new Smartphone("LG Movil", "0006", "LG Optimus", "50");
+    var iphonex = new Smartphone("Iphone", "0007", "Iphone X", "950");
+
+
     titanic.images = "images/productos/titanic.jpg";
     fast.images = "images/productos/fastfurious.jpg";
     aquarisu.images = "images/productos/aquaris-u.jpg";
     aquarisx.images = "images/productos/aquaris-x.jpg";
     tvLG.images = "images/productos/smart-tv-lg.jpg";
+    lgOptimus.images = "images/productos/lg-optimus.jpg";
+    iphonex.images = "images/productos/iphone-x.jpg";
+
+    titanic.description = "Relata la relación de Jack Dawson y Rose DeWitt Bukater, dos jóvenes que se conocen y se enamoran a bordo del transatlántico RMS Titanic en su viaje inaugural desde Southampton, Inglaterra, a Nueva York, EE. UU., en abril de 1912. Pertenecientes a diferentes clases sociales, intentan salir adelante pese a las adversidades que los separarían de forma definitiva, entre ellas el prometido de Rose, Caledon «Cal» Hockley (un adinerado del cual ella no está enamorada, pero su madre la ha obligado a permanecer con él para garantizar un futuro económico próspero) y el hundimiento del lujoso barco tras chocar con un iceberg.";
+    fast.description = "Película de acción estadounidense de 2015 dirigida por James Wan y protagonizada por Vin Diesel, Paul Walker, Dwayne Johnson, Michelle Rodríguez, Jordana Brewster, Tyrese Gibson, Ludacris y Jason Statham. Es el séptimo film de la saga The Fast and the Furious y también la secuela paralela de la película Fast & Furious 6 y de su spin-off The Fast and the Furious: Tokyo Drift.";
+    aquarisu.description = "Disfruta en tu BQ de lo mejor de Android Nougat. Con la opción multiventana podrás tener dos apps abiertas simultáneamente, el modo luz nocturna reduce la luz azul de la pantalla para ayudarte a descansar y las notificaciones ahora están agrupadas, son más interactivas y puedes responder directamente desde ellas.";
+    aquarisx.description = "Una pantalla con más de 16,5 millones de colores que abraza sutilmente el marco metálico. Líneas limpias y bordes ovalados gracias al cristal 2,5D. Cámaras que redefinen la fotografía con baja luz. Máxima potencia con el mínimo consumo. Podemos contártelo, pero nunca será como verlo.";
+    tvLG.description = "Televisor con conexión a internet, de manera que puede acceder a través de aplicaciones a la infinita oferta de deportes, series, películas y dibujos animados disponibles en la red, de manera rápida y sencilla.";
+    lgOptimus.description = "Smartphone compacto, Android 4.1.2 Jelly Bean, pantalla táctil de 4,7'', procesador de cuatro núcleos y diseño cuidado al detalle.";
+    iphonex.description = "Siempre hemos querido crear un iPhone que sea todo pantalla. Un iPhone capaz de sumergirte por completo en lo que ves. Y tan inteligente que responda a un toque, a tu voz, incluso a tu mirada. Ahora el iPhone X hace realidad esa visión. Dile hola al futuro.";
 
 
     var categoriaMoviles = new Category("Moviles");
@@ -43,12 +57,16 @@ function init() {
 
     store.addProduct(aquarisu, categoriaMoviles);
     store.addProduct(aquarisx, categoriaMoviles);
+    store.addProduct(lgOptimus, categoriaMoviles);
+    store.addProduct(iphonex, categoriaMoviles);
 
     store.addProduct(tvLG, categoriaTelevisores);
 
 
     store.addProductInShop(titanic, eroski, 30);
     store.addProductInShop(fast, eroski, 45);
+    store.addProductInShop(iphonex, eroski, 5);
+    store.addProductInShop(lgOptimus, eroski, 2);
 
     store.addProductInShop(aquarisx, carrefour, 30);
     store.addProductInShop(aquarisu, carrefour, 45);
@@ -65,6 +83,12 @@ function init() {
             var principal = document.getElementById("principal");
             principal.remove();
             initPopulate(store);
+            if (document.getElementById("categorias")) {
+                document.getElementById("categorias").remove();
+            }
+            if (document.getElementById("title")) {
+                document.getElementById("title").remove();
+            }
         }
     }
 
@@ -167,6 +191,11 @@ function init() {
 
     function shopPopulate(store, tiendaParam) {
         return function () {
+
+            if (document.getElementById("title")) {
+                document.getElementById("title").remove();
+            }
+
             console.log(tiendaParam);
 
             var principal = document.getElementById("principal");
@@ -185,6 +214,7 @@ function init() {
             while (shop.done !== true) {
 
                 if (shop.value.name == tiendaParam) {
+                    var nameShop = shop.value.name;
                     var tienda = store.getShopProducts(shop.value);
                     var shop = tienda.next();
                     while (shop.done !== true) {
@@ -206,25 +236,215 @@ function init() {
                         var enlace1 = document.createElement("a");
                         enlace1.setAttribute("href", "#");
 
-                        enlace1.setAttribute("id", "btnTiendaPrincipal" + count++);
+                        enlace1.setAttribute("id", shop.value.product.name);
 
-                        var textoEnlace1 = document.createTextNode(shop.value.product.name+"("+shop.value.stock+")");
+                        var textoEnlace1 = document.createTextNode(shop.value.product.name + "(" + shop.value.stock + ")");
+                        //  enlace1.setAttribute("name", shop.value.product.name);
                         enlace1.appendChild(textoEnlace1);
                         div1panelf.appendChild(enlace1);
 
+                        document.getElementById(shop.value.product.name).addEventListener("click", productShopPopulate(store, shop.value.product.name, nameShop));
 
                         shop = tienda.next();
 
 
-                       // console.log("Producto: " + shop.value.product.name + ", stock: " + shop.value.stock);
-                       // shop = tienda.next();
+                        // console.log("Producto: " + shop.value.product.name + ", stock: " + shop.value.stock);
+                        // shop = tienda.next();
                     }
                 }
                 shop = tiendas.next();
             }
+            if (!document.getElementById("categorias")) {
+                menuCategoryShopPopulate(store);
+            }
 
         }
+    }
 
+
+    function menuCategoryShopPopulate(store) {
+
+        var myNavbar = document.getElementById("myNavbar");
+
+        var divBoton = document.createElement("div");
+        divBoton.setAttribute("class", "btn-group pull right");
+
+        myNavbar.appendChild(divBoton);
+
+        var boton = document.createElement("button");
+        boton.setAttribute("id", "categorias");
+        boton.setAttribute("type", "button");
+        boton.setAttribute("id", "categorias");
+        boton.setAttribute("class", "btn btn-danger");
+        boton.setAttribute("data-toggle", "dropdown");
+        divBoton.appendChild(boton);
+
+        var span = document.createElement("span");
+        var text = document.createTextNode("Categorias");
+        span.appendChild(text);
+        boton.appendChild(span);
+
+        var dropDown = document.createElement("div");
+        dropDown.setAttribute("class", "dropdown-menu");
+
+        divBoton.appendChild(dropDown);
+
+        var categories = store.categorias;
+        var category = categories.next();
+
+        var cont = 0;
+
+        while (category.done !== true) {
+
+            var a = document.createElement("a");
+            a.setAttribute("class", "dropdown-item");
+            a.setAttribute("href", "#");
+            a.setAttribute("id", "cat" + cont);
+
+            var textNode = document.createTextNode(category.value.title);
+            a.appendChild(textNode);
+
+            dropDown.appendChild(a);
+
+            category = categories.next();
+            cont++;
+        }
+
+    }
+
+
+    function productsCategoryShopPopulate() {
+
+        var productosCat = showProductCategoryShop(store, tienda, categoria);
+
+
+    }
+
+
+    function showProductCategoryShop(store, tienda, categoria) {
+
+        var producto = store.getCategoryProducts(categoria);
+
+        var product = producto.next();
+
+        var categoryProducts = [];
+
+        while (product.done !== true) {
+            categoryProducts.push(product.value);
+            product = producto.next();
+        }
+
+        var tienda = store.getShopProducts(tienda);
+        var shop = tienda.next();
+
+        var shopProduct = [];
+
+        while (shop.done !== true) {
+            shopProduct.push(shop.value);
+            shop = tienda.next();
+        }
+
+        var finalArray = [];
+
+        for (var i = 0; i < shopProduct.length; i++) {
+            for (var j = 0; j < categoryProducts.length; j++) {
+                if (categoryProducts[j].serial == shopProduct[i].product.serial) {
+                    finalArray.push(shopProduct[i]);
+                }
+            }
+        }
+
+        return finalArray;
+
+
+    }
+
+
+    function productShopPopulate(store, product, shopParam) {
+        return function () {
+            // console.log(product);
+
+            var main = document.getElementById("main");
+            var principal = document.getElementById("principal");
+            principal.remove();
+
+            if (document.getElementById("title")) {
+                document.getElementById("title").remove();
+            }
+
+            //Creamos el div principal dentro del main
+
+            var divTitle = document.createElement("div");
+            divTitle.setAttribute("id", "title");
+            var titulo = document.createTextNode("DESCRIPCION PRODUCTO");
+            var tit = document.createElement("h3");
+            divTitle.appendChild(tit);
+            tit.appendChild(titulo);
+            main.appendChild(divTitle);
+
+            var divPrincipal = document.createElement("div");
+            divPrincipal.setAttribute("class", "producto row");
+            divPrincipal.setAttribute("id", "principal");
+            main.appendChild(divPrincipal);
+
+
+            var tiendas = store.tiendas;
+            var shop = tiendas.next();
+
+            var count = 0;
+            while (shop.done !== true) {
+
+                if (shop.value.name == shopParam) {
+                    var tienda = store.getShopProducts(shop.value);
+                    shop = tienda.next();
+                    while (shop.done !== true) {
+
+                        if (shop.value.product.name == product) {
+
+
+                            var divTitulo = document.createElement("div");
+                            divTitulo.setAttribute("class", "col-md-2");
+                            divPrincipal.appendChild(divTitulo);
+
+                            var h4 = document.createElement("h4");
+                            var texth4 = document.createTextNode(shop.value.product.name);
+                            h4.appendChild(texth4);
+
+                            var img = document.createElement("img");
+                            img.setAttribute("src", shop.value.product.images);
+                            img.setAttribute("class", "img-responsive");
+
+                            divTitulo.appendChild(h4);
+                            divTitulo.appendChild(img);
+
+
+                            var divDescripcion = document.createElement("div");
+                            divDescripcion.setAttribute("class", "descripcion col-md-10");
+                            divPrincipal.appendChild(divDescripcion);
+
+                            var p = document.createElement("p");
+                            var textP = document.createTextNode(shop.value.product.description);
+                            p.appendChild(textP);
+
+                            var stock = document.createElement("p");
+                            stock.setAttribute("id", "stock");
+                            stock.setAttribute("class", "pull-right");
+                            var textStock = document.createTextNode("Stock: " + shop.value.stock);
+                            stock.appendChild(textStock);
+
+                            divDescripcion.appendChild(p);
+                            divDescripcion.appendChild(stock);
+
+
+                        }
+                        console.log(shop.value.product.description);
+
+                        shop = tienda.next();
+                    }
+                }
+                shop = tiendas.next();
+            }
+        }
     }
 }
 

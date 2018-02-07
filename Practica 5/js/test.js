@@ -72,9 +72,12 @@ function testStoreHouse() {
 
     store.addProductInShop(dvd1, tienda1, 3);
     store.addProductInShop(dvd2, tienda1, 4);
+    store.addProductInShop(smartphone1, tienda1, 4);
 
     showProductsInShop(store, tienda1);
 
+
+    showProductCategoryShop(store, tienda1, categoriaPeliculas);
 }
 
 
@@ -119,9 +122,48 @@ function showProductsInShop(store, tiendaParam) {
     var tienda = store.getShopProducts(tiendaParam);
     var shop = tienda.next();
     while (shop.done !== true) {
-        console.log("Producto: " + shop.value.product + ", stock: " + shop.value.stock);
+        console.log("Producto: " + shop.value.product.name + ", stock: " + shop.value.stock);
         shop = tienda.next();
     }
 }
+
+function showProductCategoryShop(store, tienda, categoria) {
+
+    var producto = store.getCategoryProducts(categoria);
+
+    var product = producto.next();
+
+    var categoryProducts = [];
+
+    while (product.done !== true) {
+        categoryProducts.push(product.value);
+        product = producto.next();
+    }
+
+    var tienda = store.getShopProducts(tienda);
+    var shop = tienda.next();
+
+    var shopProduct = [];
+
+    while (shop.done !== true) {
+        shopProduct.push(shop.value);
+        shop = tienda.next();
+    }
+
+    var finalArray = [];
+
+    for (var i = 0; i < shopProduct.length; i++) {
+        for (var j = 0; j < categoryProducts.length; j++) {
+            if (categoryProducts[j].serial == shopProduct[i].product.serial){
+                finalArray.push(shopProduct[i]);
+            }
+        }
+    }
+
+    return finalArray;
+
+
+}
+
 
 console.log(testStoreHouse());

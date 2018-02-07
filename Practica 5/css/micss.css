@@ -1,26 +1,64 @@
-*{
+* {
     font-family: Bahnschrift;
 }
 
-body{
+body {
     background: url("../images/fondo.jpg") center no-repeat fixed;
 }
 
-
-.principal img{
+.principal img {
     width: 200px;
     height: 200px;
 }
 
-.div-Centro{
+.div-Centro {
     text-align: center;
     background-color: rgb(255, 255, 255);
     border: 3px solid rgba(72, 37, 192, 0.35);
     border-radius: 20px;
 }
 
-.div-Centro a{
+.div-Centro a {
     color: #000000;
     text-decoration: none;
     font-size: 25px;
 }
+
+#categorias {
+    margin-top: 10px;
+    width: 90px;
+    height: 30px;
+}
+
+div.dropdown-menu {
+    height: 200px;
+}
+
+.producto {
+    background-color: #e8e8e8;
+    padding: 20px;
+    box-shadow: 20px 20px 5px #995400;
+    border: 10px solid #ff9b03;
+}
+
+.producto img {
+    border: 5px solid white;
+}
+
+.descripcion {
+    padding: 50px;
+}
+
+#title {
+    color: #ff9b03;
+    -webkit-text-stroke: 1px black;
+    border-bottom: 2px groove #ff9b03;
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+#stock {
+    font-size: 30px;
+    margin-right: 50px;
+}
+
