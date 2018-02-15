@@ -75,6 +75,7 @@ function init() {
 
     initPopulate(store);
     shopMenusPopulate(store);
+    console.log(showProductCategoryShop(store, "Eroski", "Peliculas"));
 
     var home = document.getElementById("home");
 
@@ -292,14 +293,13 @@ function init() {
         var categories = store.categorias;
         var category = categories.next();
 
-        var cont = 0;
 
         while (category.done !== true) {
 
             var a = document.createElement("a");
             a.setAttribute("class", "dropdown-item");
             a.setAttribute("href", "#");
-            a.setAttribute("id", "cat" + cont);
+            a.setAttribute("id", category.value.title);
 
             var textNode = document.createTextNode(category.value.title);
             a.appendChild(textNode);
@@ -307,7 +307,6 @@ function init() {
             dropDown.appendChild(a);
 
             category = categories.next();
-            cont++;
         }
 
     }
@@ -323,7 +322,20 @@ function init() {
 
     function showProductCategoryShop(store, tienda, categoria) {
 
-        var producto = store.getCategoryProducts(categoria);
+
+        var categories = store.categorias;
+        var category = categories.next();
+
+
+        while (category.done !== true) {
+            if (category.value.title == categoria) {
+                var cat = category.value;
+            }
+            category = categories.next();
+        }
+
+
+        var producto = store.getCategoryProducts(cat);
 
         var product = producto.next();
 
@@ -334,14 +346,27 @@ function init() {
             product = producto.next();
         }
 
-        var tienda = store.getShopProducts(tienda);
-        var shop = tienda.next();
+
+        var tiendas = store.tiendas;
+        var shop = tiendas.next();
+        while (shop.done !== true) {
+
+            if (shop.value.name == tienda) {
+                var tiendaF = shop.value;
+            }
+
+            shop = tiendas.next();
+        }
+
+
+        var tiendaP = store.getShopProducts(tiendaF);
+        var shop = tiendaP.next();
 
         var shopProduct = [];
 
         while (shop.done !== true) {
             shopProduct.push(shop.value);
-            shop = tienda.next();
+            shop = tiendaP.next();
         }
 
         var finalArray = [];
@@ -446,6 +471,7 @@ function init() {
             }
         }
     }
+
 }
 
 window.onload = init;
