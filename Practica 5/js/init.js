@@ -26,6 +26,8 @@ function init() {
     var lgOptimus = new Smartphone("LG Movil", "0006", "LG Optimus", "50");
     var iphonex = new Smartphone("Iphone", "0007", "Iphone X", "950");
 
+    var galaxyJ5 = new Smartphone("J5", "0008", "Samsung Galaxy J5", "181");
+
 
     titanic.images = "images/productos/titanic.jpg";
     fast.images = "images/productos/fastfurious.jpg";
@@ -34,6 +36,7 @@ function init() {
     tvLG.images = "images/productos/smart-tv-lg.jpg";
     lgOptimus.images = "images/productos/lg-optimus.jpg";
     iphonex.images = "images/productos/iphone-x.jpg";
+    galaxyJ5.images = "images/productos/gj5.jpg";
 
     titanic.description = "Relata la relación de Jack Dawson y Rose DeWitt Bukater, dos jóvenes que se conocen y se enamoran a bordo del transatlántico RMS Titanic en su viaje inaugural desde Southampton, Inglaterra, a Nueva York, EE. UU., en abril de 1912. Pertenecientes a diferentes clases sociales, intentan salir adelante pese a las adversidades que los separarían de forma definitiva, entre ellas el prometido de Rose, Caledon «Cal» Hockley (un adinerado del cual ella no está enamorada, pero su madre la ha obligado a permanecer con él para garantizar un futuro económico próspero) y el hundimiento del lujoso barco tras chocar con un iceberg.";
     fast.description = "Película de acción estadounidense de 2015 dirigida por James Wan y protagonizada por Vin Diesel, Paul Walker, Dwayne Johnson, Michelle Rodríguez, Jordana Brewster, Tyrese Gibson, Ludacris y Jason Statham. Es el séptimo film de la saga The Fast and the Furious y también la secuela paralela de la película Fast & Furious 6 y de su spin-off The Fast and the Furious: Tokyo Drift.";
@@ -42,6 +45,7 @@ function init() {
     tvLG.description = "Televisor con conexión a internet, de manera que puede acceder a través de aplicaciones a la infinita oferta de deportes, series, películas y dibujos animados disponibles en la red, de manera rápida y sencilla.";
     lgOptimus.description = "Smartphone compacto, Android 4.1.2 Jelly Bean, pantalla táctil de 4,7'', procesador de cuatro núcleos y diseño cuidado al detalle.";
     iphonex.description = "Siempre hemos querido crear un iPhone que sea todo pantalla. Un iPhone capaz de sumergirte por completo en lo que ves. Y tan inteligente que responda a un toque, a tu voz, incluso a tu mirada. Ahora el iPhone X hace realidad esa visión. Dile hola al futuro.";
+    galaxyJ5.description = "Un móvil de gama media de entrada, ideal para las operadoras que buscan colocar sus tarifas ofreciendo terminales como añadido, y para quienes no quieren gastar demasiado dinero porque no necesitan un teléfono de última generación.";
 
 
     var categoriaMoviles = new Category("Moviles");
@@ -59,6 +63,7 @@ function init() {
     store.addProduct(aquarisx, categoriaMoviles);
     store.addProduct(lgOptimus, categoriaMoviles);
     store.addProduct(iphonex, categoriaMoviles);
+    store.addProduct(galaxyJ5, categoriaMoviles);
 
     store.addProduct(tvLG, categoriaTelevisores);
 
@@ -67,15 +72,22 @@ function init() {
     store.addProductInShop(fast, eroski, 45);
     store.addProductInShop(iphonex, eroski, 5);
     store.addProductInShop(lgOptimus, eroski, 2);
+    store.addProductInShop(tvLG, eroski, 15);
 
     store.addProductInShop(aquarisx, carrefour, 30);
     store.addProductInShop(aquarisu, carrefour, 45);
+    store.addProductInShop(galaxyJ5, carrefour, 10);
 
     store.addProductInShop(tvLG, cex, 15);
+    store.addProductInShop(aquarisu, cex, 10);
+    store.addProductInShop(galaxyJ5, cex, 15);
+
 
     initPopulate(store);
     shopMenusPopulate(store);
-    console.log(showProductCategoryShop(store, "Eroski", "Peliculas"));
+    // console.log(showProductCategoryShop(store, "Eroski", "Peliculas"));
+
+    globalProductPopulate(store);
 
     var home = document.getElementById("home");
 
@@ -182,7 +194,31 @@ function init() {
             li.appendChild(a);
             shop = tiendas.next();
 
+            if (document.getElementById("categorias")) {
+
+                var categories = store.categorias;
+                var category = categories.next();
+                while (category.done !== true) {
+
+                    document.getElementById(category.value.title).addEventListener("click", productsCategoryShopPopulate(store, shop.value.name, category.value.title));
+                    category = categories.next();
+                }
+
+            }
+
         }
+
+        var globalP = document.createElement("li");
+        globalP.setAttribute("id", "globalP");
+        var x = document.createElement("a");
+        x.setAttribute("href", "#");
+        var textoEn = document.createTextNode("Productos globales");
+        x.appendChild(textoEn);
+        globalP.appendChild(x);
+        ul.appendChild(globalP);
+
+        document.getElementById("globalP").addEventListener("click", globalProductPopulate(store));
+
 
         for (var i = 0; i < count; i++) {
             document.getElementById("btnTienda" + i).addEventListener("click", shopPopulate(store, document.getElementById("btnTienda" + i).textContent));
@@ -195,6 +231,10 @@ function init() {
 
             if (document.getElementById("title")) {
                 document.getElementById("title").remove();
+            }
+
+            if (!document.getElementById("categorias")) {
+                menuCategoryShopPopulate(store);
             }
 
             console.log(tiendaParam);
@@ -246,6 +286,16 @@ function init() {
 
                         document.getElementById(shop.value.product.name).addEventListener("click", productShopPopulate(store, shop.value.product.name, nameShop));
 
+
+                        var categories = store.categorias;
+                        var category = categories.next();
+                        while (category.done !== true) {
+
+                            document.getElementById(category.value.title).addEventListener("click", productsCategoryShopPopulate(store, nameShop, category.value.title));
+                            category = categories.next();
+                        }
+
+
                         shop = tienda.next();
 
 
@@ -254,9 +304,6 @@ function init() {
                     }
                 }
                 shop = tiendas.next();
-            }
-            if (!document.getElementById("categorias")) {
-                menuCategoryShopPopulate(store);
             }
 
         }
@@ -293,9 +340,12 @@ function init() {
         var categories = store.categorias;
         var category = categories.next();
 
+        var ul = document.createElement("ul");
+        dropDown.appendChild(ul);
 
         while (category.done !== true) {
-
+            var li = document.createElement("li");
+            ul.appendChild(li);
             var a = document.createElement("a");
             a.setAttribute("class", "dropdown-item");
             a.setAttribute("href", "#");
@@ -304,7 +354,7 @@ function init() {
             var textNode = document.createTextNode(category.value.title);
             a.appendChild(textNode);
 
-            dropDown.appendChild(a);
+            li.appendChild(a);
 
             category = categories.next();
         }
@@ -312,11 +362,72 @@ function init() {
     }
 
 
-    function productsCategoryShopPopulate() {
+    function productsCategoryShopPopulate(store, tienda, categoria) {
+        return function () {
+            var productosCat = showProductCategoryShop(store, tienda, categoria);
+            console.log(productosCat);
 
-        var productosCat = showProductCategoryShop(store, tienda, categoria);
+
+            if (document.getElementById("title")) {
+                document.getElementById("title").remove();
+            }
+
+            if (!document.getElementById("categorias")) {
+                menuCategoryShopPopulate(store);
+            }
 
 
+            var principal = document.getElementById("principal");
+            principal.remove();
+
+            var divPrincipal = document.createElement("div");
+            divPrincipal.setAttribute("class", "principal row");
+            divPrincipal.setAttribute("id", "principal");
+            main.appendChild(divPrincipal);
+
+
+            for (var i = 0; i < productosCat.length; i++) {
+
+
+                var div1 = document.createElement("div");
+                div1.setAttribute("class", "div-Centro col-md-3");
+                divPrincipal.appendChild(div1);
+                var div1panel = document.createElement("div");
+                div1panel.setAttribute("class", "panel-body");
+                div1.appendChild(div1panel);
+                var imagen1 = document.createElement("img");
+                imagen1.setAttribute("src", productosCat[i].product.images);
+                imagen1.setAttribute("class", "img-responsive");
+                div1panel.appendChild(imagen1);
+                var div1panelf = document.createElement("div");
+                div1panelf.setAttribute("class", "panel-footer");
+                div1.appendChild(div1panelf);
+                var enlace1 = document.createElement("a");
+                enlace1.setAttribute("href", "#");
+
+                enlace1.setAttribute("id", productosCat[i].product.name);
+
+                var textoEnlace1 = document.createTextNode(productosCat[i].product.name + "(" + productosCat[i].stock + ")");
+                //  enlace1.setAttribute("name", shop.value.product.name);
+                enlace1.appendChild(textoEnlace1);
+                div1panelf.appendChild(enlace1);
+
+                document.getElementById(productosCat[i].product.name).addEventListener("click", productShopPopulate(store, productosCat[i].product.name, tienda));
+
+
+                var categories = store.categorias;
+                var category = categories.next();
+                while (category.done !== true) {
+
+                    document.getElementById(category.value.title).addEventListener("click", productsCategoryShopPopulate(store, tienda, category.value.title));
+                    category = categories.next();
+                }
+
+
+            }
+
+
+        }
     }
 
 
@@ -471,6 +582,147 @@ function init() {
             }
         }
     }
+
+    function globalProductPopulate(store) {
+
+        return function () {
+
+
+            if (document.getElementById("title")) {
+                document.getElementById("title").remove();
+            }
+
+            var tiendas = store.tiendas;
+            var shop = tiendas.next();
+
+            var productosGlobales = [];
+
+            while (shop.done !== true) {
+                //Category: title
+                // console.log("Tienda: " + shop.value.name);
+
+
+                var x = store.getShopProducts(shop.value);
+                var tiendaProducts = x.next();
+                while (tiendaProducts.done !== true) {
+                    //console.log("Producto: " + tiendaProducts.value.product.name + ", stock: " + tiendaProducts.value.stock);
+
+                    a = tiendaProducts.value;
+                    var repe = false;
+                    for (var i = 0; i < productosGlobales.length; i++) {
+
+                        if (productosGlobales[i].product.name == a.product.name) {
+                            productosGlobales[i].stock = productosGlobales[i].stock + a.stock;
+                            repe = true;
+                        }
+
+                    }
+                    if (repe == false) {
+                        productosGlobales.push(a);
+                    }
+
+
+                    tiendaProducts = x.next();
+                }
+
+
+                shop = tiendas.next();
+            }
+
+            // console.log(productosGlobales);
+
+
+            var principal = document.getElementById("principal");
+            principal.remove();
+
+            var divPrincipal = document.createElement("div");
+            divPrincipal.setAttribute("class", "principal row");
+            divPrincipal.setAttribute("id", "principal");
+            main.appendChild(divPrincipal);
+
+
+            for (var i = 0; i < productosGlobales.length; i++) {
+
+                //console.log("Producto: " + productosGlobales[i].producto.product.name + ", stock: " + productosGlobales[i].producto.stock + ", tienda: " + productosGlobales[i].tienda.name);
+
+                var div1 = document.createElement("div");
+                div1.setAttribute("class", "div-Centro col-md-3");
+                divPrincipal.appendChild(div1);
+                var div1panel = document.createElement("div");
+                div1panel.setAttribute("class", "panel-body");
+                div1.appendChild(div1panel);
+                var imagen1 = document.createElement("img");
+                imagen1.setAttribute("src", productosGlobales[i].product.images);
+                imagen1.setAttribute("class", "img-responsive");
+                div1panel.appendChild(imagen1);
+
+                var h5 = document.createElement("h5");
+                var texto = document.createTextNode("Tienda: ");
+                h5.appendChild(texto);
+                div1panel.appendChild(h5);
+
+
+                var tiendas = store.tiendas;
+                var shop = tiendas.next();
+
+                var divTiendas = document.createElement("div");
+                divTiendas.setAttribute("class", "tiendas");
+                div1panel.appendChild(divTiendas);
+                while (shop.done !== true) {
+                    //Category: title
+                    // console.log("Tienda: " + shop.value.name);
+
+
+                    var x = store.getShopProducts(shop.value);
+                    var tiendaProducts = x.next();
+                    while (tiendaProducts.done !== true) {
+
+
+                        if (tiendaProducts.value.product.name == productosGlobales[i].product.name) {
+                            var a = document.createElement("a");
+                            a.setAttribute("href", "#");
+                            a.setAttribute("class", "enlaceTiendas");
+                            a.setAttribute("id", productosGlobales[i].product.name + shop.value.name);
+                            var txt = document.createTextNode(shop.value.name);
+                            a.appendChild(txt);
+                            divTiendas.appendChild(a);
+
+
+                            document.getElementById(productosGlobales[i].product.name + shop.value.name).addEventListener("click", productShopPopulate(store, productosGlobales[i].product.name, shop.value.name));
+
+                        }
+
+
+                        tiendaProducts = x.next();
+
+                    }
+
+
+                    shop = tiendas.next();
+                }
+
+
+                var div1panelf = document.createElement("div");
+                div1panelf.setAttribute("class", "panel-footer");
+                div1.appendChild(div1panelf);
+                var prod = document.createElement("p");
+                prod.setAttribute("href", "#");
+
+                prod.setAttribute("id", productosGlobales[i].product.name);
+
+                var textoProd = document.createTextNode(productosGlobales[i].product.name + "(" + productosGlobales[i].stock + ")");
+                //  enlace1.setAttribute("name", shop.value.product.name);
+                prod.appendChild(textoProd);
+                div1panelf.appendChild(prod);
+
+                //document.getElementById(productosGlobales[i].product.name).addEventListener("click", productShopPopulate(store, productosGlobales[i].product.name, nameShop));
+
+            }
+
+
+        }
+    }
+
 
 }
 

@@ -21,7 +21,18 @@ body {
 .div-Centro a {
     color: #000000;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 20px;
+}
+
+.div-Centro a:hover {
+    text-decoration: none;
+    color: #ff00e1;
+}
+
+.div-Centro:hover{
+    -webkit-box-shadow: inset 0px 0px 58px 7px rgba(0,0,0,0.62);
+    -moz-box-shadow: inset 0px 0px 58px 7px rgba(0,0,0,0.62);
+    box-shadow: inset 0px 0px 58px 7px rgba(10, 227, 195, 0.62);
 }
 
 #categorias {
@@ -30,9 +41,32 @@ body {
     height: 30px;
 }
 
-div.dropdown-menu {
-    height: 200px;
+div.dropdown-menu{
+    padding: 0;
 }
+
+div.dropdown-menu ul{
+    background-color: #e7e7e7;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+div.dropdown-menu li{
+    background-color: #d9534f;
+    border: 0.5px solid #000000;
+    text-align: center;
+}
+
+div.dropdown-menu a{
+    text-decoration: none;
+    color: #ffffff;
+}
+
+div.dropdown-menu li:hover{
+    background-color: #0ae3c3;
+}
+
 
 .producto {
     background-color: #e8e8e8;
@@ -62,3 +96,18 @@ div.dropdown-menu {
     margin-right: 50px;
 }
 
+.tiendas{
+    background-color: rgba(10, 227, 195, 0.24);
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    height: 28px;
+}
+
+.tiendas a{
+    font-size: 15px;
+}
+
+.panel-footer{
+    text-overflow:ellipsis;
+}
